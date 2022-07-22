@@ -12,7 +12,8 @@ This is a starter template for [Learn Next.js](https://nextjs.org/learn).
     - https://nextjs.org/docs/routing/introduction
     - eg.
       - https://github.com/vercel/next-learn/blob/master/basics/snippets/link-classname-example.js
-```<Link href='posts/first-post'/>
+```
+<Link href='posts/first-post'/>
         <a>text for link<a/>
 </Link>
 ```
