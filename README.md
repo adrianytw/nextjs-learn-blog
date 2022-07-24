@@ -195,3 +195,20 @@ export default function handler(req, res) {
 ```
 - [wat](https://nextjs.org/learn/basics/api-routes/api-routes-details)
 - sheesh
+
+### deploying your nextjs app
+- [workflow reccs](https://nextjs.org/learn/basics/deploying-nextjs-app/platform-details)
+- other hosting options
+```
+// package.json
+{
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    // if specific port
+    "start": "next start -p $PORT",
+  }
+}
+```
+- [what to learn next](https://nextjs.org/learn/basics/deploying-nextjs-app/finally)
