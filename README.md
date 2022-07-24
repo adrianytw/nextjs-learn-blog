@@ -490,3 +490,345 @@ export default IndexPage;
    - further reading
      - google: [consolidate duplicate urls](https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls)
      - next.js [i18n Routing](https://nextjs.org/docs/advanced-features/i18n-routing)
+
+### rendering and ranking
+- render strats
+  - static site generation, ssg
+    - rendered at build time, serves static
+  - server-side generation, ssr
+    - rendered upon request, serves static
+  - incremental static regeneration, isr
+    - allows for render for per-page basis, without needing to rebuild the entire site.
+      - retain static benefits while scaling to millions of pages
+  - client side rendering, csr
+    - served with empty html and css, rendered at clients side
+    - not recommended for optimal seo
+  - further reading
+    - Nextjs: [data fetching](https://nextjs.org/docs/basic-features/data-fetching)
+    - smashing magazine: [a complete guide o incremental staic generaltion with nextjs](https://www.smashingmagazine.com/2021/04/incremental-static-regeneration-nextjs)
+    - vercel: [nextjs: ssr vs ssg](https://vercel.com/blog/nextjs-server-side-rendering-vs-static-generation)
+- [amp](https://amp.dev/)
+  - enables devs to create web pages that load faster on mobile pages at the cost of building and maintaining them.
+  - with [core web vitals](https://web.dev/vitals/), google dropped amp pages requirement to appear in search carousels
+  - nextjs offers amp support, but consider weighing the costs and benefits of having amp implementation if me site has great core web vital scores.
+- url structure
+  - it is important part of an seo stratergy.
+  - google dosent disclose which weight each part of seo has,
+  - but good urls are considered best practice
+  - principles
+    - sementic
+      - they use words instead of random numbers
+      - e.g.
+        - ` /learn/basics/create-nextjs-app` better than `/learn/course-1/lesson-1`
+    - patterns that are logical and consistent
+      - consistency
+      - url should follow some sort of patern.
+      - instead of having different paths for each product
+    - keyword focused
+      - google still bases a considerable part of their systems on the keywords a website contains
+      - might want to use keywords in url to facilitate understanding the purpose of the pages.
+    - not parameter-based
+      -  using parameters to build urls is no gud
+      -  they are not semantic in most cases
+      -  search engine might get confused and demote rankings
+ -  how routes are defined in nextjs?
+    -  simple urls
+    -  Homepage: https://www.example.com → pages/index.js
+    - Listings: https://www.example.com/products → pages/products.js or pages/products/index.js
+    - Detail: https://www.example.com/products/product → pages/products/product.js
+  - for blogs or ecommerce site, me likely want to use product id or blog name as slug for the url, 
+    - aka dynamic routing
+    - Product:https://www.example.com/products/nextjs-shirt → pages/products/[product].js
+    - Blog:https://www.example.com/blog/seo-in-nextjs → pages/blog/[blog-name].js
+  - example of seo optimized pages
+for ssg
+```
+// pages/blog/[slug].js
+
+import Head from 'next/head';
+
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://www.example.com/api/posts');
+  const posts = await res.json();
+
+  // Get the paths we want to pre-render based on posts
+  const paths = posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+  // Set fallback to blocking. Now any new post added post build will SSR
+  // to ensure SEO. It will then be static for all subsequent requests
+  return { paths, fallback: 'blocking' };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(`https://www.example.com/api/blog/${params.slug}`);
+  const data = await res.json();
+
+  return {
+    props: {
+      blog: data,
+    },
+  };
+}
+
+function BlogPost({ blog }) {
+  return (
+    <>
+      <Head>
+        <title>{blog.title} | My Site</title>
+      </Head>
+      <div>
+        <h1>{blog.title}</h1>
+        <p>{blog.text}</p>
+      </div>
+    </>
+  );
+}
+
+export default BlogPost;
+```
+another for ssr
+```
+// pages/blog/[slug].js
+
+import Head from 'next/head';
+function BlogPost({ blog }) {
+  return (
+    <div>
+      <Head>
+        <title>{blog.title} | My Site</title>
+      </Head>
+      <div>
+        <h1>{blog.title}</h1>
+        <p>{blog.text}</p>
+      </div>
+    </div>
+  );
+}
+
+export async function getServerSideProps({ query }) {
+  const res = await fetch(`https://www.example.com/api/blog/${query.slug}`);
+  const data = await res.json();
+
+  return {
+    props: {
+      blog: data,
+    },
+  };
+}
+
+export default BlogPost;
+```
+  - further reading
+    - Next.js: [Introduction to Routing](https://nextjs.org/docs/routing/introduction)
+    - Next.js: [Pages](https://nextjs.org/docs/basic-features/pages)
+    - Next.js: [Dynamic Routing](https://nextjs.org/docs/routing/dynamic-routes)
+
+- metadata, the abstract of websites content, used to attatch a title. a description, and an image to the site.
+  - title
+    - title is one of the most important
+      - what user sees when they click to enter site
+      - main elements google uses to understand what me page is about
+        - using keywords in title is guuud
+        - eg `<title>iPhone 12 XS Max For Sale in Colorado - Big Discounts | Apple</title>`
+  - description
+    - another important but less so than title
+      - not taken into account for ranking purposes, but affect click through rate.
+    - use description meta tag to complement the information in title.
+    - work in more keywords here if some didnt fit the title.
+    - keywords appear in bold if users search contain them
+    - eg
+```
+<meta
+  name="description"
+  content="Check out iPhone 12 XR Pro and iPhone 12 Pro Max. Visit your local store and for expert advice."
+/>
+```
+```
+// example of whole
+import Head from 'next/head';
+
+function IndexPage() {
+  return (
+    <div>
+      <Head>
+        <title>
+          iPhone 12 XS Max For Sale in Colorado - Big Discounts | Apple
+        </title>
+        <meta
+          name="description"
+          content="Check out iPhone 12 XR Pro and iPhone 12 Pro Max. Visit your local store and for expert advice."
+          key="desc"
+        />
+      </Head>
+      <h1>iPhones for Sale</h1>
+      <p>insert a list of iPhones for sale.</p>
+    </div>
+  );
+}
+
+export default IndexPage;
+```
+  - open graph
+    - the [open graph protocol](https://ogp.me/)
+    - standarizes metadata is used on any given webpage
+    - good for sharing on social media sites.
+    - dosent really affect seo but good idea for sharing (backlinks).
+```
+import Head from 'next/head';
+
+function IndexPage() {
+  return (
+    <div>
+      <Head>
+        <title>Cool Title</title>
+        <meta name="description" content="Checkout our cool page" key="desc" />
+        <meta property="og:title" content="Social Title for Cool Page" />
+        <meta
+          property="og:description"
+          content="And a social description for our cool page"
+        />
+        <meta
+          property="og:image"
+          content="https://example.com/images/cool-page.jpg"
+        />
+      </Head>
+      <h1>Cool Page</h1>
+      <p>This is a cool page. It has lots of cool content!</p>
+    </div>
+  );
+}
+
+export default IndexPage;
+```
+  - structured data and json-ld
+    - facilitates understanding of your pages to search engines
+      - many over the years but [schema.org](https://schema.org/) main one
+```
+// eg
+import Head from 'next/head';
+
+function ProductPage() {
+  function addProductJsonLd() {
+    return {
+      __html: `{
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Executive Anvil",
+      "image": [
+        "https://example.com/photos/1x1/photo.jpg",
+        "https://example.com/photos/4x3/photo.jpg",
+        "https://example.com/photos/16x9/photo.jpg"
+       ],
+      "description": "Sleeker than ACME's Classic Anvil, the Executive Anvil is perfect for the business traveler looking for something to drop from a height.",
+      "sku": "0446310786",
+      "mpn": "925872",
+      "brand": {
+        "@type": "Brand",
+        "name": "ACME"
+      },
+      "review": {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "4",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Fred Benson"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.4",
+        "reviewCount": "89"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://example.com/anvil",
+        "priceCurrency": "USD",
+        "price": "119.99",
+        "priceValidUntil": "2020-11-20",
+        "itemCondition": "https://schema.org/UsedCondition",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+  `,
+    };
+  }
+  return (
+    <div>
+      <Head>
+        <title>My Product</title>
+        <meta
+          name="description"
+          content="Super product with free shipping."
+          key="desc"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={addProductJsonLd()}
+          key="product-jsonld"
+        />
+      </Head>
+      <h1>My Product</h1>
+      <p>Super product for sale.</p>
+    </div>
+  );
+}
+
+export default ProductPage;
+// In this example, the data is hardcoded as a string, but you can easily pass the data to the `addProductJsonLd` method to make it fully dynamic.
+```
+  - further reading
+    - Open Graph Protocol: [Documentation](https://ogp.me/)
+    - Google: [Intro to Structured Data](https://developers.google.com/search/docs/guides/intro-structured-data)
+    - Google: [Product Structured Data](https://developers.google.com/search/docs/data-types/product)
+    - Google Search: [Rich Results Tester](https://search.google.com/test/rich-results)
+
+- on page seo
+  - at high level, it refers to headings and links that make up the overall structure of the page
+  - headings indicate importance in the document and links connect the web together
+  - headings and h1
+    - headings help users understand structure of the page and what they are going to read in the next paragraphs.
+    - they also facilitate search engines job of understanding which parts of the page are most important
+    - heading 1-6 tends to be thought as the most important
+    - reccomended to use h1 on each page and represents what the page is about
+  - internal links
+    - websites that receive more links tend to represent sites that are more trusted by users
+    - [pagerank algorithm](https://web.stanford.edu/class/cs54n/handouts/24-GooglePageRankAlgorithm.pdf)
+      - algo that goes through every link on a db and scores domains based on how many links they receive(quantity) and from which domains(quality), lots of links from spam sites most likely have little to no value
+      - link from national press websites is likely valueble for search engines
+      - important to always include both interally between page and externally to other sites
+      - use `href` to be used for pagerank calcs
+    - next/link
+      - href prop is required and will correctly add link to anchor tag
+      - however, if child of link is a custom component that wraps an `a` tag, i must add `passHref` to `link`
+      - necessary for libs like styled components
+```
+// how to use passHref
+
+import Link from 'next/link';
+import styled from 'styled-components';
+
+// This creates a custom component that wraps an <a> tag
+const RedLink = styled.a`
+  color: red;
+`;
+
+function NavLink({ href, name }) {
+  // Must add passHref to Link
+  return (
+    <Link href={href} passHref>
+      <RedLink>{name}</RedLink>
+    </Link>
+  );
+}
+
+export default NavLink;
+```
+  - further reading
+    - [next/link documentation](https://nextjs.org/docs/api-reference/next/link)
+    - [eslint-plugin-next documentation](https://nextjs.org/docs/basic-features/eslint)
