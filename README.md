@@ -185,3 +185,13 @@ export default function Custom404() {
 - [bruh.](https://nextjs.org/learn/basics/dynamic-routes/dynamic-routes-details)
 
 ### api routes
+- very confusing but nextjs lets us create api routes
+  - pages/api/hello.js
+  - eg 
+```
+export default function handler(req, res) {
+  res.status(200).json({ text: 'Hello' });
+}
+```
+- [wat](https://nextjs.org/learn/basics/api-routes/api-routes-details)
+- sheesh
