@@ -832,3 +832,6 @@ export default NavLink;
   - further reading
     - [next/link documentation](https://nextjs.org/docs/api-reference/next/link)
     - [eslint-plugin-next documentation](https://nextjs.org/docs/basic-features/eslint)
+
+### performance & core web vitals
+// to be continued
