@@ -90,6 +90,8 @@ export default function Alert({ children, type }) {
   );
 }
 ```
+
+### pre-rendering and data-fetching
 - npm install gray-matter
   - for reading metadata on md
   - getStaticProps for static site generation with data
@@ -159,3 +161,27 @@ function Profile() {
   return <div>hello {data.name}!</div>;
 }
 ```
+
+### dynamic routes
+- dynamic routes
+  - generates routes/url from variable to a link
+    - e.g. /posts/[id]
+  - `[var].js` files are dynamic routes in nextjs 
+  - ![summary for dem routes](https://nextjs.org/static/images/learn/dynamic-routes/how-to-dynamic-routes.png)
+  - [link cuz i know i will come back here](https://nextjs.org/learn/basics/dynamic-routes/implement-getstaticprops)
+- render markdown
+  - npm install remark remark-html
+- Catch-all Routes
+  - `pages/posts/[...id].js` matches `/posts/a`, but also `/posts/a/b`, `/posts/a/b/c` and so on.
+- Router
+  - If you want to access the Next.js router, you can do so by importing the [`useRouter`](https://nextjs.org/docs/api-reference/next/router#userouter) hook from [`next/router`](https://nextjs.org/docs/api-reference/next/router).
+- [404 pages](https://nextjs.org/docs/advanced-features/custom-error-page#404-page)
+```
+// pages/404.js
+export default function Custom404() {
+  return <h1>404 - Page Not Found</h1>;
+}
+```
+- [bruh.](https://nextjs.org/learn/basics/dynamic-routes/dynamic-routes-details)
+
+### api routes
