@@ -212,3 +212,48 @@ export default function handler(req, res) {
 }
 ```
 - [what to learn next](https://nextjs.org/learn/basics/deploying-nextjs-app/finally)
+
+### seo notes
+- seo gud cuz
+  - qualitative, more visitors = more customers
+  - trustable, higher confidence in your brand or mission
+  - low cost, aside from time and effort, good seo practices = higher search ranking = free top organic search
+- 3 PILLARS OF OPTIMIZATION
+  - technical, optimize website for crawlking and web performance
+  - creation, create content stratergy to target specific words
+  - popularity, boost presence online so search engines know me trusted source, backlinks = good, thirdparty site that link back to me side = backlink
+- search systems
+  - crawling, process of going through the web and parsing contents of all websites
+  - indexing, finding place to store data gathered from crawling
+  - rendering, executing js on pages that might enhance features and enrich content on the site. rendering might happen after indexing cuz no resources on their end to render task at that time
+  - ranking. querying data to show relevant result based on user input, this is where different ranking criteria are applied to search engines to give users the best ansewr to fufill their intent
+- whot web crawlers
+  - different search engines have different market shares in each country
+    - google
+    - bing
+    - yandex
+    - baidu
+    - naver
+    - yahoo
+    - duckduckgo
+  - web crawlers identify themselves using custom [user-agents](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)
+  - google has [several webcrawlers](https://developers.google.com/search/docs/advanced/crawling/overview-google-crawlers)
+  - how does google bot works?
+    - ![google bot crawling process](https://nextjs.org/_next/image?url=%2Fstatic%2Fimages%2Flearn%2Fseo%2Fgooglebot.png&w=1920&q=75)
+      1. find urls
+        - using [google search console](https://search.google.com/search-console)
+        - links between sites
+        - [xml sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/overview)
+      2. http request
+        - `200` - crawls and parses html
+        - `30X` - it follws the redirects
+        - `40X` - it will note the error ant not load the HTML
+        - `50X` - it may come back after if status code has changed
+          - status code, 
+      3. render queue
+         - a queue for indexing sites with js, but its uses mroe resources thus urls rendered are a smaller percentage over total pages out there on the internet
+      4. ready to be indexed
+         - if all criteria are ment, pages may be eligible to be indexed and be shown in search results. 
+      5. futher reading
+         1. Google: [SEA starter guide](https://developers.google.com/search/docs/beginner/seo-starter-guide)
+         2. MDN: [MDN: User-Agents](https://developer.mozilla.org/es/docs/Web/HTTP/Headers/User-Agent)
